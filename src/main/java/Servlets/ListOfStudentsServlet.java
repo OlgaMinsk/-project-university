@@ -37,7 +37,7 @@ public class ListOfStudentsServlet extends HttpServlet {
     @Override
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    //    session = request.getSession();
+        //    session = request.getSession();
         String action = "";
         if (request.getParameter(PARAMETER_ACTION) != null) {
             action = request.getParameter(PARAMETER_ACTION);
@@ -112,7 +112,8 @@ public class ListOfStudentsServlet extends HttpServlet {
                     "<br>" +
                     "<br><a href='" + LINK_SERVLET + "?" + PARAMETER_ACTION + "=" + ACTION_GET_PARAMETERS_TO_ADD_STUDENT + "' >Add new student</a><br>";
         } catch (NumberFormatException exception) {
-            return "<p>Please enter only numeric parameters</p>" +
+            exception.printStackTrace();
+            return "<!-- " + exception.getMessage() + " -->" + "<p>Please enter only numeric parameters</p>" +
                     "<form action='" + LINK_SERVLET + "?" + PARAMETER_ACTION + "=" + ACTION_LIST_OF_STUDENTS + "' method='get'> " +
                     "<input name='" + PARAMETER_PAGE + "' value='" + (page + 1) + "' pattern='^[1-9]\\d*$' required/>" +
                     "<br><label>Students per page</label>" +
@@ -158,14 +159,16 @@ public class ListOfStudentsServlet extends HttpServlet {
             }
         } catch (DAOException e) {
             e.printStackTrace();
-            return "<p>Page = " + page + "</p><p>No such of page</p><br>";
+            return "<!-- " + e.getMessage() + " -->" + "<p>Page = " + page + "</p><p>No such of page</p><br>";
         } catch (NumberFormatException exception) {
-            return "<p>Please enter only numeric parameters</p>";
+            exception.printStackTrace();
+            return "<!-- " + exception.getMessage() + " -->" + "<p>Please enter only numeric parameters</p>";
         } finally {
             try {
                 studentDatabaseDAO.closeAll();
             } catch (DAOException e) {
                 e.printStackTrace();
+                return "<!-- " + e.getMessage() + " -->";
             }
         }
 
@@ -240,7 +243,7 @@ public class ListOfStudentsServlet extends HttpServlet {
             return updateStudentHml;
         } catch (Exception e) {
             e.printStackTrace();
-            return updateStudentHml = "Sorry, something went wrong. We are already correcting this situation. Please try again later<br>" +
+            return updateStudentHml = "<!-- " + e.getMessage() + " -->" + "Sorry, something went wrong. We are already correcting this situation. Please try again later<br>" +
                     "<a  href='" + link + "&" + PARAMETER_ACTION + "=" + ACTION_LIST_OF_STUDENTS + "'  type='submit'>Ok</a>" +
                     "</div>";
         } finally {
@@ -248,6 +251,7 @@ public class ListOfStudentsServlet extends HttpServlet {
                 studentDatabaseDAO.closeAll();
             } catch (DAOException e) {
                 e.printStackTrace();
+                return "<!-- " + e.getMessage() + " -->";
             }
         }
 
@@ -280,7 +284,7 @@ public class ListOfStudentsServlet extends HttpServlet {
             }
         } catch (DAOException e) {
             e.printStackTrace();
-            String st = "<div class='window'>" +
+            String st = "<!-- " + e.getMessage() + " -->" + "<div class='window'>" +
                     "We will not delete this student. And don't ask<br>" +
                     "<a  href='" + link + "'  type='submit'>Ok</a>" +
                     "</div>";
@@ -290,6 +294,7 @@ public class ListOfStudentsServlet extends HttpServlet {
                 studentDatabaseDAO.closeAll();
             } catch (DAOException e) {
                 e.printStackTrace();
+                return "<!-- " + e.getMessage() + " -->";
             }
         }
 
@@ -334,7 +339,7 @@ public class ListOfStudentsServlet extends HttpServlet {
             studentDatabaseDAO.update(studentDTO);
         } catch (Exception e) {
             e.printStackTrace();
-            String st = "<div class='window'>" +
+            String st = "<!-- " + e.getMessage() + " -->" + "<div class='window'>" +
                     "We will not update this student. Sorry<br>" +
                     "<a  href='" + link + "'  type='submit'>Ok</a>" +
                     "</div>";
@@ -344,6 +349,7 @@ public class ListOfStudentsServlet extends HttpServlet {
                 studentDatabaseDAO.closeAll();
             } catch (DAOException e) {
                 e.printStackTrace();
+                return "<!-- " + e.getMessage() + " -->";
             }
         }
         return "";
@@ -393,18 +399,20 @@ public class ListOfStudentsServlet extends HttpServlet {
 
         } catch (DAOException e) {
             e.printStackTrace();
-            String st = "<div class='window'>" +
+            String st = "<!-- " + e.getMessage() + " -->" + "<div class='window'>" +
                     "We can't add this student. Sorry<br>" +
                     "<a  href='" + link + "'  type='submit'>Ok</a>" +
                     "</div>";
             return st;
         } catch (NumberFormatException exception) {
-            return "<p>Please enter only numeric parameters</p>";
+            exception.printStackTrace();
+            return "<!-- " + exception.getMessage() + " -->" + "<p>Please enter only numeric parameters</p>";
         } finally {
             try {
                 studentDatabaseDAO.closeAll();
             } catch (DAOException e) {
                 e.printStackTrace();
+                return "<!-- " + e.getMessage() + " -->";
             }
         }
         return "";
